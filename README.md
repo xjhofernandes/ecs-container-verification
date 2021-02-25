@@ -1,2 +1,2 @@
 # ecs-container-verification
-Test to check numbers of containers are live in ECS. 
+Test to check numbers of containers are running in ECS. 
