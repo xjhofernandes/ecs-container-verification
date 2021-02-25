@@ -1,4 +1,4 @@
-import requests, os, time, sys
+import requests, os, sys, click
 
 uri = os.getenv('ECS_CONTAINER_METADATA_URI')
 
@@ -10,18 +10,25 @@ def receiver_containers():
     data = r.json()        
     return data['Containers']
 
+
+@click.command("check_containers")
 def check_containers():
     """"
-        Check a number of containers. If has only one, the application ends.
+    Check a number of containers. If has only one, the application ends.
     """
-    tasks = receiver_containers()
+    print("Starting ecs-verification...")
 
+    tasks = receiver_containers()
+    print(f"There's {len(tasks)} containers running!")
     if len(tasks) == 1:
         sys.exit("All containers terminated! ;)")
-    print(f"There's {len(tasks)} containers running!")
 
-print("Starting ecs-verification...")
-print(f'AWS ECS url: {uri}')
-while True:
-    check_containers()
-    time.sleep(60)
+
+@click.group(help="Tool to check ECS containers.")
+def _cli():
+    pass
+
+_cli.add_command(check_containers)
+
+if __name__ == '__main__':
+    _cli()
