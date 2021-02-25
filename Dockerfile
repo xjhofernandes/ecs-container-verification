@@ -1,9 +1,9 @@
 FROM python:3.8-slim
 
-RUN pip install requests
+RUN pip install requests click
 
 COPY . /my-app
 
 WORKDIR /my-app
 
-CMD ["python", "main.py"]
+ENTRYPOINT [ "bash", "script.sh" ]
