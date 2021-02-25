@@ -1,4 +1,4 @@
-import requests, os, sys, click
+import requests, os, sys, click, signal, time
 
 uri = os.getenv('ECS_CONTAINER_METADATA_URI')
 
@@ -7,7 +7,8 @@ def receiver_containers():
         Receiver containers list from your ECS instance.
     """
     r = requests.get(uri + '/task')
-    data = r.json()        
+    data = r.json()   
+
     return data['Containers']
 
 def count_running_containers(tasks):
@@ -23,13 +24,13 @@ def check_containers():
     """"
     Check a number of containers. If has only one, the application ends.
     """
-
     tasks = receiver_containers()
-
     running_containers = count_running_containers(tasks)
-    print(f"There's {running_containers} containers running!")
+    
     if running_containers == 1:
-        sys.exit("All containers terminated! ;)")
+        print("All containers terminated! ;)")
+    else:
+        print(f"There's {running_containers} containers running!")
 
 
 @click.group(help="Tool to check ECS containers.")
