@@ -10,17 +10,25 @@ def receiver_containers():
     data = r.json()        
     return data['Containers']
 
+def count_running_containers(tasks):
+    count = 0
+    for container in tasks:
+        if container['KnownStatus'] == "RUNNING":
+            count += 1
+    return count
+
 
 @click.command("check_containers")
 def check_containers():
     """"
     Check a number of containers. If has only one, the application ends.
     """
-    print("Starting ecs-verification...")
 
     tasks = receiver_containers()
-    print(f"There's {len(tasks)} containers running!")
-    if len(tasks) == 1:
+
+    running_containers = count_running_containers(tasks)
+    print(f"There's {running_containers} containers running!")
+    if running_containers == 1:
         sys.exit("All containers terminated! ;)")
 
 
